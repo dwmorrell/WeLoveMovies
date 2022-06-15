@@ -1,11 +1,15 @@
 const knex = require("../db/connection");
 
+
 function list() {
     return knex("reviews").select("*");
 }
 
 function read(movieId) {
-    return knex("reviews").select("*").where({ movie_id: movieId}).first();
+    return knex("reviews")
+    .select("*")
+    .where({ movie_id: movieId})
+    .first();
 
 }
 
@@ -29,8 +33,14 @@ function getMovieReviews(movieId) {
 }
 
 async function setCritic(review) {
-    review.critic = await readCritic(review.critic_id);
-    return review;
+    try {
+        review.critic = await readCritic(review.critic_id);
+        return review;
+
+    } catch (error) {
+        console.error("Something went wrong", error);
+        
+    }
   }
 
   function readCritic(criticId) {
@@ -38,4 +48,13 @@ async function setCritic(review) {
     .select("*")
     .where({ critic_id: criticId })
     .first();
+  }
+
+  module.exports = {
+      list,
+      read,
+      destroy,
+      getCritics,
+      getMovieReviews,
+
   }

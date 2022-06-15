@@ -1,6 +1,5 @@
-const services = require("./reviews.services");
+const services = require("./reviews.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
-const getCritics = require(".")
 
 
 async function reviewExists(req, res, next) {
@@ -24,7 +23,7 @@ async function update(req, res, next) {
         ...req.body.data,
         review_id: res.locals.review.review_id,
     };
-    const data = await service.update(updatedReview);
+    const data = await services.update(updatedReview);
     const review = await services.read(Number(review_id));
 
     const returnDataWithCritic = {
@@ -54,8 +53,8 @@ async function destroy(req, res) {
 }
 
 module.exports = {
-    list: [asyncErrorBoundary(list)],
+    list,
     update: [asyncErrorBoundary(reviewExists), asyncErrorBoundary(update)],
-    read,
+    read: [asyncErrorBoundary(read)],
     destroy: [asyncErrorBoundary(reviewExists), asyncErrorBoundary(destroy)],
 }

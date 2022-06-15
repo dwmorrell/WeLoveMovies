@@ -20,18 +20,9 @@ function moviesInTheaters() {
 }
 
 
-function whereToWatch(movieId) {
-  return knex("movies_theaters as mt")
-    .join("movies as m", "mt.movie_id", "m.movie_id")
-    .join("theaters as t", "t.theater_id", "mt.theater_id")
-    .select("t.*")
-    .where({ "mt.movie_id": movieId })
-    .distinct("mt.theater_id");
-}
-
 module.exports = {
   list,
   read,
   moviesInTheaters,
-  whereToWatch
+  
 }
