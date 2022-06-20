@@ -1,60 +1,36 @@
 const knex = require("../db/connection");
-
-
-function list() {
-    return knex("reviews").select("*");
+  
+const read = (reviewId) => {
+    return knex("reviews")
+        .select("*")
+        .where({ "review_id": reviewId })
+        .first()
 }
 
-function read(movieId) {
-    return knex("reviews")
-    .select("*")
-    .where({ movie_id: movieId})
-    .first();
-
+const readCritic = (reviewId) => {
+    return knex("reviews as r")
+        .where({ "review_id": reviewId })
+        .join("critics as c", "r.critic_id", "c.critic_id")
+        .select("c.preferred_name", "c.surname", "c.organization_name")
+        .first()
 }
 
-function destroy(reviewId) {
+const update = (updatedReview) => {
     return knex("reviews")
-    .where({ review_id: reviewId})
+    .update(updatedReview, "*")
+    .where({ review_id: updatedReview.review_id })
+    .then(() => read(updatedReview.review_id));
+};
+ 
+const destroy = (reviewId) => {
+  return knex("reviews")
+    .where({ review_id: reviewId })
     .del();
-}
-
-function getCritics(criticId) {
-    return knex("critics")
-    .select("*")
-    .where({ critic_id: criticId})
-    .first();
-}
-
-function getMovieReviews(movieId) {
-    return knex("reviews")
-    .where({ movie_id: movieId })
-    .then((reviews) => Promise.all(reviews.map(setCritic)));
-}
-
-async function setCritic(review) {
-    try {
-        review.critic = await readCritic(review.critic_id);
-        return review;
-
-    } catch (error) {
-        console.error("Something went wrong", error);
-        
-    }
-  }
-
-  function readCritic(criticId) {
-    return knex("critics")
-    .select("*")
-    .where({ critic_id: criticId })
-    .first();
-  }
-
+};
+  
   module.exports = {
-      list,
-      read,
-      destroy,
-      getCritics,
-      getMovieReviews,
-
-  }
+    read,
+    update,
+    delete: destroy,
+    readCritic,
+  };
