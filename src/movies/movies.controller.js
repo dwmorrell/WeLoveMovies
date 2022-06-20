@@ -2,7 +2,7 @@
 const services = require("./movies.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
-
+// Checks if movie exists by id, if not, it returns a 404 status and error message
 const movieExists = async (req, res, next) => {
   const { movieId } = req.params;
   const movie = await services.read(movieId); 
@@ -16,11 +16,12 @@ const movieExists = async (req, res, next) => {
   });
 }
 
-
+// Reads single movie based on id
 const read = (req, res) => {
   res.json({ data: res.locals.movie });
 }
 
+// Lists movies that are currently showing or a list of all movies
 const list = async (req, res) => {
   const { is_showing } = req.query;
 
@@ -31,13 +32,16 @@ const list = async (req, res) => {
   }
 }
 
+// Gets a list of all theaters that are showing a movie by movie_id
 const getTheaters = async (req, res) => {
   const { movieId } = req.params
   const result = await services.getTheaters(movieId)
   
-  res.json({ data:result })
+  res.json({ data: result })
 }
 
+// Gets a list of reviews for a movie based on movie_id and 
+// adds the critic info for each review based on critic_id
 const getReviews = async (req, res) => {
   const { movieId } = req.params
   const reviews = await services.getMovieReviews(movieId);

@@ -1,7 +1,7 @@
 const services = require("./reviews.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
-
+// Checks if the review exists, if not returns a 404 error with error message
 const reviewExists = async (req, res, next) => {
     const { reviewId } = req.params;
     const review = await services.read(reviewId);
@@ -15,6 +15,8 @@ const reviewExists = async (req, res, next) => {
     });
 }
 
+// PUT method to update an existing review based on review_id
+// and attach critic info for response
 const update = async (req, res, next) => {
     const updatedReview = {
         ...res.locals.review,
@@ -33,7 +35,7 @@ const update = async (req, res, next) => {
     
 }
 
-
+// Deletes an existing review, based on review_id
 const destroy = async (req, res) => {
    await services.delete(res.locals.review.review_id);
     res.sendStatus(204);
