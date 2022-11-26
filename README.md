@@ -1,6 +1,7 @@
 # WeLoveMovies Server
 
 This is the backend server for the WeLoveMovies frontend [repo](https://github.com/dwmorrell/WeLoveMovies-Front-End). Created using Node.js, Knex.js, and Express.js.
+The deployed site can be found here: https://we-love-movies-client.onrender.com
 
  ## Features
  - Built an API using RESTful design principles
